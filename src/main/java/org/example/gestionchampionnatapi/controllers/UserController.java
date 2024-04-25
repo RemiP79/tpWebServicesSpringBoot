@@ -29,7 +29,7 @@ public class UserController {
     }
 
     // Get One
-    @GetMapping("/{user}")
+    @GetMapping("/{idUser}")
     public User getOne(@PathVariable Long idUser){
         Optional<User> user = userRepository.findById(idUser);
         return user.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));

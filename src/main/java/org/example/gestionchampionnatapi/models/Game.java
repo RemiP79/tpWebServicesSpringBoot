@@ -1,6 +1,10 @@
 package org.example.gestionchampionnatapi.models;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.example.gestionchampionnatapi.repository.GameRepository;
+
+import java.util.List;
 
 @Entity
 public class Game {
@@ -26,6 +30,41 @@ public class Game {
     @JoinColumn(name = "idDay", referencedColumnName = "id")
     private Day day;
 
+
+///////////////////////////////////
+///////////////////////////////////:
+    // test calcul résultats :
+    @ManyToOne
+    @JoinColumn(name = "championship_id", referencedColumnName = "id")
+    private ChampionShip championShip;
+
+    @ManyToOne
+    @JoinColumn(name = "winningTeamId", referencedColumnName = "id")
+    private Team winningTeam;
+    public void determineWinner() {
+
+        Long winPoint = championShip.getWonPoint();
+        Long lostPoint = championShip.getLostPoint();
+        Long drawPoint = championShip.getDrawPoint();
+       // ChampionShip championship = day.getChampionship(); // Supposons que day contient la journée associée au match
+
+        if (team1Point > team2Point) {
+            winningTeam = team1;
+            team1.addPoints(winPoint); // Ajoute les points de victoire à l'équipe gagnante
+            team2.addPoints(lostPoint); // Ajoute les points de défaite à l'équipe perdante
+        } else if (team1Point < team2Point) {
+            winningTeam = team2;
+            team1.addPoints(winPoint); // Ajoute les points de défaite à l'équipe perdante
+            team2.addPoints(winPoint); // Ajoute les points de victoire à l'équipe gagnante
+        } else {
+            winningTeam = null; // Match nul, aucune équipe n'a de point bonus
+            team1.addPoints(drawPoint); // Ajoute les points de match nul à chaque équipe
+            team2.addPoints(drawPoint);
+        }
+    }
+    // fin test
+////////////////////////////////////////
+////////////////////////////////////////
     public Game() {
     }
 

@@ -30,6 +30,28 @@ public class Team {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "teams")
     private Set<ChampionShip> championShips = new HashSet<>();
 
+
+    ////////////////////////////:
+    // test calcul resultats :
+
+    private int points;
+
+
+    public void addPoints(Long pointsToAdd) {
+        points += pointsToAdd;
+    }
+    public int getPoints() {
+        return this.points;
+    }
+
+
+
+
+    // fin test calcul resultat
+    ////////////////////////////////////////
+
+
+
     public Team() {
     }
 
