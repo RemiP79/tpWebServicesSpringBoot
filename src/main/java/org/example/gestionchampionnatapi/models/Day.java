@@ -15,13 +15,13 @@ public class Day {
     private String number;
 
     @ManyToOne // Relation many-to-one avec Championship
-    @JoinColumn(name = "idChampionship", referencedColumnName = "id", insertable = false, updatable = false)
-    private Championship championship;
+    @JoinColumn(name = "idChampionship", referencedColumnName = "id")
+    private ChampionShip championship;
 
     public Day(){
     }
 
-    public Day(Long id, String number, Championship championship) {
+    public Day(Long id, String number, ChampionShip championship) {
         this.id = id;
         this.number = number;
         this.championship = championship;
@@ -43,11 +43,11 @@ public class Day {
         this.number = number;
     }
 
-    public Championship getChampionship() {
+    public ChampionShip getChampionship() {
         return championship;
     }
 
-    public void setChampionship(Championship championship) {
+    public void setChampionship(ChampionShip championship) {
         this.championship = championship;
     }
 }

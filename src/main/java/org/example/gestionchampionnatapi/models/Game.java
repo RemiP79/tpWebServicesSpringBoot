@@ -15,15 +15,15 @@ public class Game {
     private Long team2Point;
 
     @ManyToOne
-    @JoinColumn(name = "idTeam1", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "idTeam1", referencedColumnName = "id")
     private Team team1;
 
     @ManyToOne
-    @JoinColumn(name = "idTeam2", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "idTeam2", referencedColumnName = "id")
     private Team team2;
 
     @ManyToOne
-    @JoinColumn(name = "idDay", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "idDay", referencedColumnName = "id")
     private Day day;
 
     public Game() {

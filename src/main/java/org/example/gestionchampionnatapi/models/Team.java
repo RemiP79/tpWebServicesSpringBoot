@@ -1,6 +1,8 @@
 package org.example.gestionchampionnatapi.models;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -23,6 +25,10 @@ public class Team {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate creationDate;
+
+    // List championnats
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "teams")
+    private Set<ChampionShip> championShips = new HashSet<>();
 
     public Team() {
     }
@@ -54,5 +60,13 @@ public class Team {
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Set<ChampionShip> getChampionShips() {
+        return championShips;
+    }
+
+    public void setChampionShips(Set<ChampionShip> championShips) {
+        this.championShips = championShips;
     }
 }

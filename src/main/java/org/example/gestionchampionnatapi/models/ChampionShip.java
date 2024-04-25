@@ -1,13 +1,17 @@
 package org.example.gestionchampionnatapi.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
-public class Championship {
+public class ChampionShip {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,10 +41,28 @@ public class Championship {
     @NotNull(message = "Le champ wonPoint ne peut pas être null")
     private Long drawPoint;
 
-    public Championship(){
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Team> teams = new HashSet<>();
+
+    //add & delete
+    public void addTeam(Team team) {
+        this.teams.add(team);
+        team.getChampionShips().add(this);
     }
 
-    public Championship(Long id, String name, LocalDate startDate, LocalDate endDate, Long wonPoint, Long lostPoint, Long drawPoint) {
+    public void removeTeam(long idTeam) {
+        Team team = this.teams.stream().filter(t -> t.getId() == idTeam).findFirst().orElse(null);
+        if (team != null) {
+            this.teams.remove(team);
+            team.getChampionShips().remove(this);
+        }
+    }
+
+    public ChampionShip(){
+    }
+
+    public ChampionShip(Long id, String name, LocalDate startDate, LocalDate endDate, Long wonPoint, Long lostPoint, Long drawPoint) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -105,4 +127,13 @@ public class Championship {
     public void setDrawPoint(Long drawPoint) {
         this.drawPoint = drawPoint;
     }
+
+    public Set<Team > getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
+
 }
