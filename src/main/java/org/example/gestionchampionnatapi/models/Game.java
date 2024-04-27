@@ -30,23 +30,20 @@ public class Game {
     @JoinColumn(name = "idDay", referencedColumnName = "id")
     private Day day;
 
-
-
     // Determination liste des resultats :
-    /*@ManyToOne
-    @JoinColumn(name = "championship_id", referencedColumnName = "id")
-    private ChampionShip championShip;*/
+    @ManyToOne
+    private ChampionShip championShip;
 
     @ManyToOne
     @JoinColumn(name = "winningTeamId", referencedColumnName = "id")
     private Team winningTeam;
 
     public void determineWinner() {
-        ChampionShip championship = day.getChampionship(); // Supposons que day contient la journée associée au match
+        ChampionShip championshipDay = day.getChampionship(); // Supposons que day contient la journée associée au match
 
-        Long winPoint = championship.getWonPoint();
-        Long lostPoint = championship.getLostPoint();
-        Long drawPoint = championship.getDrawPoint();
+        Long winPoint = championshipDay.getWonPoint();
+        Long lostPoint = championshipDay.getLostPoint();
+        Long drawPoint = championshipDay.getDrawPoint();
 
         if (team1Point > team2Point) {
             winningTeam = team1;

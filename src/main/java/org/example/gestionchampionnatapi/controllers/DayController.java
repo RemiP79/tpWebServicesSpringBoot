@@ -42,6 +42,8 @@ public class DayController {
         return days.isEmpty() ? new ResponseStatusException(HttpStatus.NOT_FOUND,"Le championnant renseigné n'existe pas") : days;
     }
 
+    //lier day à championnat
+
     // Created
     @PostMapping("/")
     public ResponseEntity<Day> saveDay(@Valid @RequestBody Day Day, BindingResult bindingResult){
