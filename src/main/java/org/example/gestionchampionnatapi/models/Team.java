@@ -32,25 +32,16 @@ public class Team {
 
 
     ////////////////////////////:
-    // test calcul resultats :
-
+    // calcul resultats poiur liste résultats:
     private int points;
-
-
     public void addPoints(Long pointsToAdd) {
         points += pointsToAdd;
     }
     public int getPoints() {
         return this.points;
     }
-
-
-
-
     // fin test calcul resultat
     ////////////////////////////////////////
-
-
 
     public Team() {
     }

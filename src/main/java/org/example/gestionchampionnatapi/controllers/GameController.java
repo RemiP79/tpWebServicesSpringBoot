@@ -21,7 +21,8 @@ public class GameController {
     // Endpoint pour déterminer les gagnants et enregistrer les jeux
         @PostMapping("/determinewinnersandsave")
         public ResponseEntity<String> determineWinnersAndSave(@RequestBody GameIdRequest request) {
-            List<Long> gameIds = request.getGameIds();    Iterable<Game> games = gameRepository.findAllById(gameIds);
+            List<Long> gameIds = request.getGameIds();
+            Iterable<Game> games = gameRepository.findAllById(gameIds);
             for (Game game : games) {
                 game.determineWinner();
             }
@@ -29,7 +30,20 @@ public class GameController {
             return ResponseEntity.ok("Winners determined and games saved successfully.");
         }
 
-        // Endpoint pour récupérer le classement des équipes
+    /*@PostMapping("/determinewinnersandsave/{championshipId}")
+    public ResponseEntity<String> determineWinnersAndSave(@PathVariable Long championshipId) {
+        // Récupérez les identifiants des jeux associés à ce championnat
+        List<Long> gameIds = gameRepository.findGameIdsByChampionShipId(championshipId);
+        Iterable<Game> games = gameRepository.findAllById(gameIds);
+        for (Game game : games) {
+            game.determineWinner();
+        }
+        gameRepository.saveAll(games);
+        return ResponseEntity.ok("Winners determined and games saved successfully.");
+    }*/
+
+
+    // Endpoint pour récupérer le classement des équipes
         @GetMapping("/teamranking")
         public ResponseEntity<List<Team>> getTeamRanking() {
             List<Team> teams = teamRepository.findAll();// récupérez toutes les équipes depuis la base de données

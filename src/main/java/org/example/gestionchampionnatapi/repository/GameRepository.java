@@ -14,8 +14,12 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     @Override
     List<Game> findAll();
 
+
     /////test resultats
-   // List<Game> saveAll(List<Game> games);
+
+   // List<Long> findGameIdsByChampionshipId(Long championshipId);
+
+    // List<Game> saveAll(List<Game> games);
     /////////// fin tests
 }
 
