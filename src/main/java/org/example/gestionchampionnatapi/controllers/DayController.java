@@ -24,22 +24,23 @@ public class DayController {
 
     // Get All
     @GetMapping("/")
-    public List<Day> getAll(){
+    public List<Day> getDays(){
         return dayRepository.findAll();
     }
 
     // Get One
-    @GetMapping("/{Day}")
-    public Day getOne(@PathVariable Long idDay){
-        Optional<Day> Day = dayRepository.findById(idDay);
-        return Day.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
+    @GetMapping("/{idDay}")
+    public Day getDay(@PathVariable Long idDay){
+        Optional<Day> day = dayRepository.findById(idDay);
+        return day.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
     }
 
-    @GetMapping("/championship/{Day}")
-    public List<Day> getOneByChampionship(@PathVariable Long idDay){
-        return dayRepository.findDayByChampionshipId(idDay);
+    // Get
+    @GetMapping("/championship/{idChampionship}")
+    public Object getDaysByChampionship(@PathVariable Long idChampionship){
+        List<Day> days = dayRepository.findDayByChampionshipId(idChampionship);
+        return days.isEmpty() ? new ResponseStatusException(HttpStatus.NOT_FOUND,"Le championnant renseigné n'existe pas") : days;
     }
-
 
     // Created
     @PostMapping("/")
@@ -53,10 +54,10 @@ public class DayController {
     }
 
     // Update
-    @PutMapping("/{Day}")
-    public ResponseEntity<Day> updateDay(@PathVariable(name="Day", required = false) Day Day, @Valid @RequestBody Day DayUpdate, BindingResult bindingResult){
+    @PutMapping("/{day}")
+    public ResponseEntity<Day> updateDay(@PathVariable(name="day", required = false) Day Day, @Valid @RequestBody Day DayUpdate, BindingResult bindingResult){
         if(Day == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidat introuvable");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Jour introuvable");
         } else {
             if(bindingResult.hasErrors()){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, bindingResult.toString());
@@ -69,10 +70,10 @@ public class DayController {
     }
 
     // Delete
-    @DeleteMapping("/{Day}")
-    public void deleteOne(@PathVariable(name="Day", required = false) Day Day){
+    @DeleteMapping("/{day}")
+    public void deleteDay(@PathVariable(name="day", required = false) Day Day){
         if(Day == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidat introuvable");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Jour introuvable");
         } else {
             dayRepository.delete(Day);
         }

@@ -22,27 +22,28 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    // Get All
+    // Get users
     @GetMapping("/")
-    public List<User> getAll(){
+    public List<User> getUsers(){
         return userRepository.findAll();
     }
 
-    // Get One
+    // Get user
     @GetMapping("/{idUser}")
-    public User getOne(@PathVariable Long idUser){
+    public User getUser(@PathVariable Long idUser){
         Optional<User> user = userRepository.findById(idUser);
         return user.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
     }
 
-    @GetMapping("/{email}/{password}")
+    // Get user by email and password
+    @GetMapping("/connect/{email}/{password}")
     public User getUserByEmailPassword(@PathVariable String email, @PathVariable String password){
         Optional<User> user = userRepository.findByEmailAndPassword(email, password);
-        return user.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
+        return user.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Identifiant ou mot de passe incorrect"));
     }
 
 
-    // Created
+    // Create user
     @PostMapping("/")
     public ResponseEntity<User> saveUser(@Valid @RequestBody User user, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
@@ -53,11 +54,11 @@ public class UserController {
         }
     }
 
-    // Update
+    // Update user
     @PutMapping("/{user}")
     public ResponseEntity<User> updateUser(@PathVariable(name="user", required = false) User user, @Valid @RequestBody User userUpdate, BindingResult bindingResult){
         if(user == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidat introuvable");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable");
         } else {
             if(bindingResult.hasErrors()){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, bindingResult.toString());
@@ -69,11 +70,11 @@ public class UserController {
         }
     }
 
-    // Delete
+    // Delete user
     @DeleteMapping("/{user}")
     public void deleteOne(@PathVariable(name="user", required = false) User user){
         if(user == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidat introuvable");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable");
         } else {
             userRepository.delete(user);
         }

@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/championships")
-
 public class ChampionShipController {
     private ChampionshipRepository championShipRepository;
 
@@ -22,22 +21,22 @@ public class ChampionShipController {
         this.championShipRepository = championShipRepository;
     }
 
-    // Get All
+    // Get all championship
     @GetMapping("/")
-    public List<ChampionShip> getAll(){
+    public List<ChampionShip> getChampionShip(){
         return championShipRepository.findAll();
     }
 
-    // Get One
+    // Get one championship
     @GetMapping("/{championShip}")
-    public ChampionShip getOne(@PathVariable Long id){
+    public ChampionShip getChampionShip(@PathVariable Long id){
         Optional<ChampionShip> championShip = championShipRepository.findById(id);
         return championShip.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Championnat non trouvé"));
     }
 
-    // Created
+    // Create championship
     @PostMapping("/")
-    public ResponseEntity<ChampionShip> saveUser(@Valid @RequestBody ChampionShip championShip, BindingResult bindingResult){
+    public ResponseEntity<ChampionShip> saveChampionShip(@Valid @RequestBody ChampionShip championShip, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, bindingResult.toString());
         } else {
@@ -46,11 +45,11 @@ public class ChampionShipController {
         }
     }
 
-    // Update
-    @PutMapping("/{user}")
-    public ResponseEntity<ChampionShip> updateUser(@PathVariable(name="championShip", required = false) ChampionShip championShip, @Valid @RequestBody ChampionShip championShipUpdate, BindingResult bindingResult){
+    // Update championship
+    @PutMapping("/{championShip}")
+    public ResponseEntity<ChampionShip> updatechampionShip(@PathVariable(name="championShip", required = false) ChampionShip championShip, @Valid @RequestBody ChampionShip championShipUpdate, BindingResult bindingResult){
         if(championShip == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ChampionShip introuvable");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Championnat introuvable");
         } else {
             if(bindingResult.hasErrors()){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, bindingResult.toString());
@@ -62,11 +61,11 @@ public class ChampionShipController {
         }
     }
 
-    // Delete
-    @DeleteMapping("/{user}")
-    public void deleteOne(@PathVariable(name="user", required = false) ChampionShip championShip){
+    // Delete championship
+    @DeleteMapping("/{championShip}")
+    public void deletechampionShip(@PathVariable(name="championShip", required = false) ChampionShip championShip){
         if(championShip == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Candidat introuvable");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Championnat introuvable");
         } else {
             championShipRepository.delete(championShip);
         }
