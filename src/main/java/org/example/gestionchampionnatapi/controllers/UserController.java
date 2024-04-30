@@ -72,11 +72,12 @@ public class UserController {
 
     // Delete user
     @DeleteMapping("/{user}")
-    public void deleteOne(@PathVariable(name="user", required = false) User user){
+    public ResponseEntity<User> deleteUser(@PathVariable(name="user", required = false) User user){
         if(user == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur introuvable");
         } else {
             userRepository.delete(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
 }

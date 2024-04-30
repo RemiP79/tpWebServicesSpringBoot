@@ -12,14 +12,12 @@ import java.util.List;
 public interface GameRepository extends JpaRepository<Game, Long> {
     @Override
     List<Game> findAll();
-
-    /////test resultats
     @Query("SELECT g.id FROM Game g WHERE g.day.championship.id = :championshipId")
     List<Long> findGameIdsByChampionshipId(@Param("championshipId") Long championshipId);
-
-    // List<Long> findGameIdsByChampionshipId(Long championshipId);
-
-    // List<Game> saveAll(List<Game> games);
-    /////////// fin tests
+    @Query("SELECT g FROM Game g WHERE g.day.championship.id = :championshipId")
+    List<Game> findGamesByChampionShipId(@Param("championshipId") Long championshipId);
+    List<Game> findGamesByDayId(Long id);
+    @Query("SELECT g FROM Game g WHERE g.team1.id = :teamId OR g.team2.id = :teamId")
+    List<Game> getGameByTeamId(@Param("teamId") Long teamId);
 }
 

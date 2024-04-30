@@ -27,6 +27,14 @@ public class Day {
         this.championship = championship;
     }
 
+    public void bindDayToChampionship(ChampionShip championship){
+        this.championship = championship;
+    }
+
+    public void unbindDayToChampionship(){
+        this.championship = null;
+    }
+
     public Long getId() {
         return id;
     }

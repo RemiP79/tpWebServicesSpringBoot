@@ -2,7 +2,10 @@ package org.example.gestionchampionnatapi.controllers;
 
 import jakarta.validation.Valid;
 import org.example.gestionchampionnatapi.models.ChampionShip;
+import org.example.gestionchampionnatapi.models.Day;
 import org.example.gestionchampionnatapi.repository.ChampionshipRepository;
+import org.example.gestionchampionnatapi.repository.DayRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,10 +18,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/api/championships")
 public class ChampionShipController {
+    @Autowired
+    private DayController dayController;
     private ChampionshipRepository championShipRepository;
+    private DayRepository dayRepository;
 
-    public ChampionShipController(ChampionshipRepository championShipRepository){
+    public ChampionShipController(ChampionshipRepository championShipRepository, DayRepository dayRepository){
         this.championShipRepository = championShipRepository;
+        this.dayRepository = dayRepository;
     }
 
     // Get all championship
@@ -28,9 +35,9 @@ public class ChampionShipController {
     }
 
     // Get one championship
-    @GetMapping("/{championShip}")
-    public ChampionShip getChampionShip(@PathVariable Long id){
-        Optional<ChampionShip> championShip = championShipRepository.findById(id);
+    @GetMapping("/{idChampionShip}")
+    public ChampionShip getChampionShip(@PathVariable Long idChampionShip){
+        Optional<ChampionShip> championShip = championShipRepository.findById(idChampionShip);
         return championShip.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Championnat non trouvé"));
     }
 
@@ -63,11 +70,15 @@ public class ChampionShipController {
 
     // Delete championship
     @DeleteMapping("/{championShip}")
-    public void deletechampionShip(@PathVariable(name="championShip", required = false) ChampionShip championShip){
+    public ResponseEntity<ChampionShip> deletechampionship(@PathVariable(name="championShip", required = false) ChampionShip championShip){
         if(championShip == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Championnat introuvable");
         } else {
+            championShip.getTeams().forEach(team -> team.getChampionShips().remove(championShip));
+            List<Day> days = dayRepository.findDayByChampionshipId(championShip.getId());
+            days.forEach(day -> dayController.deleteDay(day));
             championShipRepository.delete(championShip);
+            return new ResponseEntity<>(championShip, HttpStatus.OK);
         }
     }
 }

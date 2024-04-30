@@ -2,15 +2,20 @@ package org.example.gestionchampionnatapi.controllers;
 
 import jakarta.validation.Valid;
 import org.example.gestionchampionnatapi.models.ChampionShip;
+import org.example.gestionchampionnatapi.models.Day;
+import org.example.gestionchampionnatapi.models.Game;
 import org.example.gestionchampionnatapi.models.Team;
 import org.example.gestionchampionnatapi.repository.ChampionshipRepository;
+import org.example.gestionchampionnatapi.repository.GameRepository;
 import org.example.gestionchampionnatapi.repository.TeamRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,12 +23,16 @@ import java.util.Set;
 @RestController
 @RequestMapping(value = "/api/teams")
 public class TeamController {
+    @Autowired
+    private GameController gameController;
     private ChampionshipRepository championShipRepository;
     private TeamRepository teamRepository;
+    private GameRepository gameRepository;
 
-    public TeamController(ChampionshipRepository championShipRepository, TeamRepository teamRepository){
+    public TeamController(ChampionshipRepository championShipRepository, TeamRepository teamRepository, GameRepository gameRepository){
         this.championShipRepository = championShipRepository;
         this.teamRepository = teamRepository;
+        this.gameRepository = gameRepository;
     }
 
     // Get all teams
@@ -99,6 +108,11 @@ public class TeamController {
         if(team == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Equipe introuvable");
         } else {
+
+            List<ChampionShip> championShips = new ArrayList<>(team.getChampionShips());
+            championShips.forEach(championShip -> championShip.removeTeam(team.getId()));
+            List<Game> games = gameRepository.getGameByTeamId(team.getId());
+            games.forEach(game -> gameController.deleteGame(game));
             teamRepository.delete(team);
         }
     }
